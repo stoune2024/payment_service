@@ -6,5 +6,5 @@ class PaymentCreate(BaseModel):
     amount: float
     currency: str
     description: Optional[str] = None
-    metadata: Optional[Dict] = None
+    extra: Optional[Dict] = None
     webhook_url: str

@@ -5,7 +5,7 @@ from settings.settings import settings
 from sqlalchemy import select
 from app.schemas import Payment, Outbox
 
-engine = create_async_engine(settings.DB_URL, echo=False)
+engine = create_async_engine(settings.db_url, echo=False)
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 

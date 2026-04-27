@@ -13,7 +13,7 @@ class Payment(Base):
     amount = Column(Numeric(10, 2), nullable=False)
     currency = Column(String(3), nullable=False)
     description = Column(String)
-    metadata = Column(JSON)
+    extra = Column(JSON)
     status = Column(String, default="pending")
     idempotency_key = Column(String, unique=True, nullable=False)
     webhook_url = Column(String)

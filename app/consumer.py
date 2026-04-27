@@ -12,6 +12,8 @@ DLQ = "payment.dlq"
 async def handle(msg: dict):
     async with SessionLocal() as session:
         payment = await Repository.get_payment(session, msg["payment_id"])
+        if not payment:
+            return
 
         await asyncio.sleep(random.randint(2, 5))
 

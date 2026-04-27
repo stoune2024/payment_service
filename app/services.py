@@ -9,9 +9,11 @@ async def create_payment(data, key, session):
 
     payment = Payment(**data.model_dump(), idempotency_key=key)
 
+    session.add(payment)
+    await session.flush()
+
     event = Outbox(event_type="payment.new", payload={"payment_id": payment.id})
 
-    session.add(payment)
     session.add(event)
 
     await session.commit()
