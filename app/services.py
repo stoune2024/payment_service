@@ -7,7 +7,14 @@ async def create_payment(data, key, session):
     if existing:
         return existing
 
-    payment = Payment(**data.model_dump(), idempotency_key=key)
+    payment = Payment(
+        amount=data.amount,
+        currency=data.currency,
+        description=data.description,
+        extra=data.extra,
+        idempotency_key=key,
+        webhook_url=data.webhook_url,
+    )
 
     session.add(payment)
     await session.flush()

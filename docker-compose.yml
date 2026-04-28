@@ -10,20 +10,31 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   api:
     build: .
-    command: python main.py
+    command: >
+      sh -c "
+      alembic upgrade head &&
+      python main.py
+      "
     depends_on:
-      rabbitmq:
-        condition: service_healthy
       postgres:
         condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
 
   publisher:
     build: .
@@ -42,3 +53,11 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres

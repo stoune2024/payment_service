@@ -21,6 +21,7 @@ async def handle(msg: dict):
         payment.status = "succeeded" if success else "failed"
         payment.processed_at = datetime.utcnow()
 
+        session.add(payment)
         await session.commit()
 
         ok = await send_webhook(
